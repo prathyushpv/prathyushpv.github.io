@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-Computer Architecture and Systems Lab
+Computer Architecture and Systems Lab  
 Indian Institute of Science, Bangalore
 
 <!--
