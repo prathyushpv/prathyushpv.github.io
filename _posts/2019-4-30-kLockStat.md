@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "kLockStat: An eBPF Tool To Monitor Linux Kernel Lock Contentions"
+tags: [Linux, eBPF]
 ---
 
 Today most of the applications are multithreaded. Parallelism improves performance of applications. But there can be scalability bottlenecks inside the kernel. There are studies that exposes such bottlenecks in linux kernel. Even if the application is written in a perfectly scalable fasion, sometimes the bottlenecks inside the kernel prevent the application from scaling to a large number of processors. There are two main reasons for this problem
