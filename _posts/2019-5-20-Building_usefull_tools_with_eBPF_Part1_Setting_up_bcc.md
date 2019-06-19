@@ -41,7 +41,7 @@ Once the packages are installed, you can try out some tools written in bcc. For 
 ```bash
 sudo /usr/share/bcc/tools/execsnoop
 ```
-The execsnoop will attatch a probe on the system call syscall__execve and it will print the command passed to execute in the terminal. You can open some application and check the terminal to see execsnoop in action. execsnoop should print the name of the application you just opened.
+The execsnoop will attatch a probe on the system call execve and it will print the command passed to execute in the terminal. You can open some application and check the terminal to see execsnoop in action. execsnoop should print the name of the application you just opened.
 
 ## Scripting in bcc
 
