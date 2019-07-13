@@ -6,17 +6,17 @@ tags: [Linux, eBPF]
 
  Linux kernel has different types of locks for synchronization. Spin locks, Semaphores, Futexes are some examples. These locks have different behavior and if they are not used properly, it can create performance degradation. For example, spinlocks have least locking and unlocking times but they waste CPU cycles. Spinlocks are used when the waiting time is known to be small. But if a kernel thread is waiting for a spinlock for a considerable amount of time, CPU time is wasted and system performance will be severely affected.
  
- ## Lock contentions
+## Lock contentions
  There can be situations in which threads are waiting for locks for long time periods and the majority of the time is spent on waiting rather than doing useful work. This is a lock contention and it should be avoided. Sometimes these contentions are unforeseen during the development of the system. So it's very important to quickly identify lock contentions in systems and fix that.
  
  With the help of eBPF, we can identify contentions in the Linux kernel. In this post, I will explain how to trace all locking operations on read-write locks in the Linux kernel, and see if there is any lock being contented for.
  
- ## Read-Write in Linux Kernel
+## Read-Write in Linux Kernel
  Read-write locks provide simultaneous read access to threads, but when a thread needs to get write access, it gets exclusive access. This type of lock is usually used to protect a data structure which is read by many threads at the same time and modified infrequently. 
  
  In the Linux kernel, there are two types of read-write locks, the one using spinlock and the one using semaphores. We will try to find out the waiting times of kernel threads on read-write locks that use spinlocks.
  
- ## Locking function of read-write locks
+## Locking function of read-write locks
  
  Now we need to figure out which function in the Linux kernel will wait on the read-write locks. For simplicity, we will only consider the read lock waiting times. We can list out all the possible kernel functions that eBPF can trace by using the command
  
@@ -55,7 +55,7 @@ kprobe:btrfs_try_tree_read_lock
 
 In this output, the function we are looking for is *_raw_read_lock*. The actual function for acquiring a read lock in the kernel is read_lock() function, but that function internally calls *_raw_read_lock*. So it is sufficient to trace the function *_raw_read_lock*.
 
- ## Tracing a locking event
+## Tracing a locking event
  
  For finding the waiting time of a thread for a particular read lock acquisition, we have to figure out how much time that thread spent on *_raw_read_lock()* function call. For this when a thread enters this function, we have to keep track of that time and when the thread returns from that function, we have to record that time also. Then we can find the waiting time as 
 
