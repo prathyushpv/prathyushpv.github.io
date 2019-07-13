@@ -5,12 +5,14 @@ tags: [Linux, eBPF]
 ---
 
  Linux kernel has different types of locks for synchronization. Spin locks, Semaphores, Futexes are some examples. These locks have different behavior and if they are not used properly, it can create performance degradation. For example, spinlocks have least locking and unlocking times but they waste CPU cycles. Spinlocks are used when the waiting time is known to be small. But if a kernel thread is waiting for a spinlock for a considerable amount of time, CPU time is wasted and system performance will be severely affected.
- 
+
+
 ## Lock contentions
  There can be situations in which threads are waiting for locks for long time periods and the majority of the time is spent on waiting rather than doing useful work. This is a lock contention and it should be avoided. Sometimes these contentions are unforeseen during the development of the system. So it's very important to quickly identify lock contentions in systems and fix that.
  
  With the help of eBPF, we can identify contentions in the Linux kernel. In this post, I will explain how to trace all locking operations on read-write locks in the Linux kernel, and see if there is any lock being contented for.
- 
+
+
 ## Read-Write in Linux Kernel
  Read-write locks provide simultaneous read access to threads, but when a thread needs to get write access, it gets exclusive access. This type of lock is usually used to protect a data structure which is read by many threads at the same time and modified infrequently. 
  
