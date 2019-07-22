@@ -222,8 +222,20 @@ while 1:
 *  The wile loop will poll the perf buffer for 10 seconds.
 *  print_event function will extract details from the ring buffer and display it on the terminal. We will get the c structure data_t as a python object. We can access the member of struct using the dot operator.
 
-When everything is put together, the final script is: 
+When everything is put together, the final script is: [lockstat.py · GitHub](https://gist.github.com/prathyushpv/f12d0f7e6b3acb8a3388fb00c0c12152)
 
 This script will track individual wait times of all locking operations and displays it on the terminal. But from this information, we will not be able to identify the locks that are contented for easily. For this, we need to process the data we are extracting and should display it in a way that is more useful. 
 
-The next part will explain how to create an HTML report from this information have.
+
+## An HTML Report to Quickly Pinpoint Contentions 
+Now we have individual lock waiting times for all locking operations. What we want to figure out is, which locks are heavily contented. For this, we have to add up the waiting times of individual locks and display the total waiting times.
+
+Also, it would be better if we plot a bar chart of all locks. It will be easy to figure out if any locks are heavily contented than others by looking at the height of the bars.
+
+So we have to display the following things in the HTML report
+* A table containing the totals wait times of each lock in sorted order of waiting times
+* A bar diagram showing the waiting times of all locks.
+
+Also if we want to monitor different types of locks in the kernel, you can add other tables and graphs to the report.
+
+Creating a report from the data we have collected is a straight forward process. We can use the jinja2 module in python to get this task done. I have uploaded the complete code in the repository : [GitHub - prathyushpv/lockstat: A tool based on eBPF to find out scalability bottlenecks in kernel.](https://github.com/prathyushpv/lockstat)
