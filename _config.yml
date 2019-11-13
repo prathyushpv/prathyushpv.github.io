@@ -2,7 +2,7 @@
 baseurl: ""
 url: "https://prathyushpv.github.io"
 title: Prathyush's Blog # site's title
-description: "A blog" # used by search engines
+description: "OS/Architecture/Compilers" # used by search engines
 
 
 # THEME-SPECIFIC CONFIGURATION
@@ -14,7 +14,7 @@ theme_settings:
   gravatar: # Email MD5 hash
 
   # Header and footer text
-  header_text:  A Blog
+  header_text:  OS/Architecture/Compilers
   header_feature_image: assets/img/pexels/triangular.webp
   footer_text: >
     Powered by <a href="https://jekyllrb.com/">Jekyll</a> with <a href="https://github.com/sylhare/Type-on-Strap">Type on Strap</a>
