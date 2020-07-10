@@ -4,11 +4,11 @@ title: "High-Performance Matrix Multiplication, Part 1: What's Wrong in Your Cod
 tags: [Architecture, HPC]
 ---
 
-Multiplying two matrices is a very common subproblem in solving larger problems starting from solving a set of linear equations to training Deep Neural Networks. It is very important to do matrix multiplication with the maximum efficiency of the hardware platform. In this post, I am trying to find the performance of the simplest 3 loop implementation of matrix multiplication and compare it with that of libraries used in the industry. I will also discuss the bottlenecks and how we can approach the efficiency of industrial-grade high-performance math libraries using our knowledge of the CPU architecture.
+Multiplying two matrices is a very common subproblem in solving larger problems starting from solving a set of linear equations to training Deep Neural Networks. It is very important to do matrix multiplication with the maximum efficiency of the hardware platform. In this series of blog posts, I am trying to find the performance of the simplest 3 loop implementation of matrix multiplication and compare it with that of libraries used in the industry. I will also discuss the bottlenecks and how we can approach the efficiency of industrial-grade high-performance math libraries using our knowledge of the CPU architecture.
 
 # Introduction to Matrix Multiplication
 
-![An example of Matrix Multiplication](/assets/img/eBPF/GEMM.png)
+![An example of Matrix Multiplication](/assets/img/matrix_multiplication/GEMM.png)
 *An Example of Matrix Multiplication*
 
 Consider the above example of matrix multuplication. We want to multiply the matrices A and B and save the result in the matrix C. (i, j)th element of C can be found by taking the dot product of ith row of a and jth column of B. And if we do this operation for all the i x j elements of C, we will get the resultant C matrix. 
@@ -50,7 +50,7 @@ Caches usually use something similar to LRU(Last Recently Used). A new line is b
 
 Lets have a close look at the code snippet above and try to figure out how this will behave in the cache. In C matrices are stored in row major order. The memory accesses of the first matrix in row wise. When a single digit is access, adjascent digits that are in the same cache line are also brought to the cache. This will speed up the consequent accesses. But the memory access pattern of matrix B is colum wise and this is really bad for cache.
 
-![Cache Layout](/assets/img/eBPF/GEMM_Cache.png)
+![Cache Layout](/assets/img/matrix_multiplication/GEMM_Cache.png)
 
 Consider that the green boxes inside the matrix B are the cache lines. Each element in the column we are considering is in a different cache line. Accessing any element in the row will require memory access which is costly. Between two multiplications(of an element of A and an element of B) there is memory access and this will waste hundreds of CPU cycles. As you can see, CPU is spending most of its time waiting for data from memory to arrive rather than doing actual computation. At this point, it doesn't matter how fast is your CPU, the real bottleneck is memory access latency.
 
